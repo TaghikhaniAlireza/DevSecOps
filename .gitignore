@@ -1,0 +1,18 @@
+```gitignore
+# Vagrant
+.vagrant/
+
+# Ansible
+*.retry
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.pem
+*.key
