@@ -1,4 +1,4 @@
-content = '''# Step 5 – Multi-VM Architecture (Noyan DevOps Lab)
+# Step 5 – Multi-VM Architecture (Noyan DevOps Lab)
 
 ## Overview
 This document describes the infrastructure architecture of the **Noyan Multi-VM DevOps Lab** built using **Vagrant** and **VirtualBox**. The goal of this step is to define and freeze the infrastructure design before any provisioning or configuration management is applied.
@@ -61,3 +61,51 @@ Resources are intentionally conservative to ensure compatibility with local deve
 
 All virtual machines follow a strict naming convention:
 
+```
+Noyan_<Role>
+```
+
+This ensures:
+- Easy identification in VirtualBox
+- Consistency across documentation and scripts
+- Professional, portfolio-ready structure
+
+---
+
+## Vagrantfile Responsibility
+
+At this step, the `Vagrantfile` is responsible **only** for:
+- Defining virtual machines
+- Assigning hostnames
+- Configuring network interfaces
+- Allocating system resources
+
+It **does not** handle:
+- Package installation
+- Service configuration
+- Security hardening
+
+These concerns are intentionally deferred to **Step 6 – Provisioning**.
+
+---
+
+## Validation Checklist
+
+The architecture is considered valid if:
+- All three VMs start successfully using `vagrant up`
+- Each VM has the correct hostname
+- VMs can ping each other via private IPs
+- VM names appear correctly in VirtualBox
+
+---
+
+## Next Step
+
+**Step 6 – Provisioning** will introduce:
+- Shell provisioners
+- Base package installation
+- Control VM preparation for Ansible
+
+---
+
+*This document intentionally focuses on infrastructure architecture only. Configuration management and automation are addressed in subsequent steps.*
