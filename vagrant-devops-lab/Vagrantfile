@@ -1,45 +1,64 @@
+# ============================================================
+#  Vagrant Multi-VM Lab - Noyan DevSecOps Environment
+#  Maintainer: AliReza
+# ============================================================
+
 Vagrant.configure("2") do |config|
+
+  # -------------------------------
+  # Base Box
+  # -------------------------------
   config.vm.box = "ubuntu/jammy64"
 
-  # ======================
-  # Noyan Control VM
-  # ======================
-  config.vm.define "Noyan_Control" do |control|
+  # Shared synced folder
+  config.vm.synced_folder ".", "/vagrant"
+
+  # ===============================
+  # Control Node
+  # ===============================
+  config.vm.define "noyan-control" do |control|
     control.vm.hostname = "noyan-control"
     control.vm.network "private_network", ip: "192.168.56.10"
 
     control.vm.provider "virtualbox" do |vb|
-      vb.name = "Noyan_Control"
+      vb.name   = "noyan-control"
       vb.memory = 1536
-      vb.cpus = 2
+      vb.cpus  = 2
     end
+
+    control.vm.provision "shell", path: "provisioning/shell/common.sh"
   end
 
-  # ======================
-  # Noyan App VM
-  # ======================
-  config.vm.define "Noyan_App" do |app|
+  # ===============================
+  # Application Node
+  # ===============================
+  config.vm.define "noyan-app" do |app|
     app.vm.hostname = "noyan-app"
     app.vm.network "private_network", ip: "192.168.56.11"
 
     app.vm.provider "virtualbox" do |vb|
-      vb.name = "Noyan_App"
+      vb.name   = "noyan-app"
       vb.memory = 1024
-      vb.cpus = 1
+      vb.cpus  = 1
     end
+
+    app.vm.provision "shell", path: "provisioning/shell/common.sh"
   end
 
-  # ======================
-  # Noyan DB VM
-  # ======================
-  config.vm.define "Noyan_DB" do |db|
+  # ===============================
+  # Database Node
+  # ===============================
+  config.vm.define "noyan-db" do |db|
     db.vm.hostname = "noyan-db"
     db.vm.network "private_network", ip: "192.168.56.12"
 
     db.vm.provider "virtualbox" do |vb|
-      vb.name = "Noyan_DB"
+      vb.name   = "noyan-db"
       vb.memory = 1024
-      vb.cpus = 1
+      vb.cpus  = 1
     end
+
+    db.vm.provision "shell", path: "provisioning/shell/common.sh"
   end
+
 end
