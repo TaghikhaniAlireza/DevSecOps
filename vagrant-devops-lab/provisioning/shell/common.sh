@@ -13,47 +13,47 @@ if [ -f /etc/apt/sources.list ]; then
     sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup.$(date +%Y%m%d)
 fi
 
-# Set to Debian/Ubuntu mirrors (adjust if using a different base)
-# For Ubuntu 22.04 (jammy)
-#cat <<EOF | sudo tee /etc/apt/sources.list
-#deb http://mirror.iranrepo.ir/ubuntu/ jammy main restricted universe multiverse
-#deb http://mirror.iranrepo.ir/ubuntu/ jammy-updates main restricted universe multiverse
-#deb http://mirror.iranrepo.ir/ubuntu/ jammy-security main restricted universe multiverse
-#EOF
-
+#---## Set to Debian/Ubuntu mirrors (adjust if using a different base)
+#---## For Ubuntu 22.04 (jammy)
+#---#cat <<EOF | sudo tee /etc/apt/sources.list
+#---#deb http://mirror.iranrepo.ir/ubuntu/ jammy main restricted universe multiverse
+#---#deb http://mirror.iranrepo.ir/ubuntu/ jammy-updates main restricted universe multiverse
+#---#deb http://mirror.iranrepo.ir/ubuntu/ jammy-security main restricted universe multiverse
+#---#EOF
+#---#
 # --- Update (without upgrade) ---
 sudo apt-get update -y
 # sudo apt-get upgrade -y   # Commented out to keep version controlled
 
 # --- Install fundamental packages ---
-sudo apt-get install -y curl wget vim git net-tools htop unzip software-properties-common
+sudo apt-get install -y curl wget vim git net-tools htop unzip software-properties-common sshpass
 
-# --- Set timezone (Asia/Tehran) ---
-sudo timedatectl set-timezone Asia/Tehran
-
-# --- Configure NTP with servers ---
-sudo apt-get install -y chrony
-cat <<EOF | sudo tee /etc/chrony/chrony.conf
-# NTP servers
-server ntp.ir  iburst
-server time.ir iburst
-pool pool.ntp.org iburst
-
-# Allow NTP client access from local network
-allow 192.168.56.0/24
-
-# Increase polling interval for stability
-minpoll 4
-maxpoll 16
-
-# Enable kernel RTC synchronization
-rtcsync
-EOF
-
-sudo systemctl restart chrony
-sudo systemctl enable chrony
-sudo timedatectl set-ntp true
-
+#---## --- Set timezone (Asia/Tehran) ---
+#---#sudo timedatectl set-timezone Asia/Tehran
+#---#
+#---## --- Configure NTP with servers ---
+#---#sudo apt-get install -y chrony
+#---#cat <<EOF | sudo tee /etc/chrony/chrony.conf
+#---## NTP servers
+#---#server ntp.ir  iburst
+#---#server time.ir iburst
+#---#pool pool.ntp.org iburst
+#---#
+#---## Allow NTP client access from local network
+#---#allow 192.168.56.0/24
+#---#
+#---## Increase polling interval for stability
+#---#minpoll 4
+#---#maxpoll 16
+#---#
+#---## Enable kernel RTC synchronization
+#---#rtcsync
+#---#EOF
+#---#
+#---#sudo systemctl restart chrony
+#---#sudo systemctl enable chrony
+#---#sudo timedatectl set-ntp true
+#---#
 # --- Add a standard non‑root user ---
 USER_NAME="devops"
 
