@@ -24,6 +24,7 @@ Vagrant.configure("2") do |config|
       vb.name   = "noyan-control"
       vb.memory = 1536
       vb.cpus  = 2
+	  #vagrant plugin install vagrant-disksize
 	  #vb.disksize.size = '50GB' if defined?(VagrantPlugins::DiskSize)
     end
 
