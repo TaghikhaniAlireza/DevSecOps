@@ -18,4 +18,4 @@ New-Item roles\system_hardening\tasks\main.yml -ItemType File
 New-Item roles\system_hardening\handlers\main.yml -ItemType File
 New-Item roles\system_hardening\defaults\main.yml -ItemType File
 
-Write-Host "✅ Ansible skeleton created successfully"
+Write-Host "Ansible skeleton created successfully"
