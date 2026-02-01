@@ -1,6 +1,3 @@
-# ansible path
-cd provisioning\ansible
-
 # making directories
 mkdir inventory
 mkdir playbooks

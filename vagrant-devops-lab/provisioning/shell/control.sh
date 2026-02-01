@@ -50,26 +50,4 @@ done
 
 sudo chown -R $CONTROL_USER:$CONTROL_USER "$ANSIBLE_DIR"
 
-# --- Create basic inventory file ---
-INVENTORY_FILE="$ANSIBLE_DIR/inventory/hosts.ini"
-
-if [ ! -f "$INVENTORY_FILE" ]; then
-cat <<EOF | sudo tee "$INVENTORY_FILE"
-[noyan_control]
-192.168.56.10
-
-[noyan_app]
-192.168.56.11
-
-[noyan_db]
-192.168.56.12
-
-[noyan_all:children]
-noyan_control
-noyan_app
-noyan_db
-EOF
-    sudo chown $CONTROL_USER:$CONTROL_USER "$INVENTORY_FILE"
-fi
-
 echo "========== [Noyan Control] Control Node setup completed =========="
