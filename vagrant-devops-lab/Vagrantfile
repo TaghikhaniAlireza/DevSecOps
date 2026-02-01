@@ -30,6 +30,10 @@ Vagrant.configure("2") do |config|
 
     control.vm.provision "shell", path: "provisioning/shell/common.sh"
 	control.vm.provision "shell", path: "provisioning/shell/control.sh"
+	
+	control.vm.synced_folder "provisioning/ansible", "/home/devops/ansible",
+      owner: "devops",
+      group: "devops"
   end
 
   # ===============================
