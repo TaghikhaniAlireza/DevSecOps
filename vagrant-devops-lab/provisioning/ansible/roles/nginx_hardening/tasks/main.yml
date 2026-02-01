@@ -1,0 +1,3 @@
+---
+# Nginx Role Orchestrator
+- import_tasks: install.yml

@@ -1,0 +1,38 @@
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 512;
+}
+
+http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    # --- Security baseline ---
+    server_tokens off;
+    client_max_body_size 8m;
+
+    access_log /var/log/nginx/access.log;
+    error_log  /var/log/nginx/error.log;
+
+    # --- Default minimal site ---
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        server_name _;
+        root /var/www/html;
+
+        location / {
+            return 200 'Nginx baseline active.\n';
+            add_header Content-Type text/plain;
+        }
+    }
+}
