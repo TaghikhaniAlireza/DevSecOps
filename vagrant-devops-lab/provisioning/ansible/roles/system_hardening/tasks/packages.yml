@@ -1,0 +1,51 @@
+---
+# ================================
+# Common packages (ALL nodes)
+# ================================
+- name: Install common base packages
+  apt:
+    name:
+      - curl
+      - wget
+      - vim
+      - git
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      - net-tools
+      - htop
+      - unzip
+    state: present
+    update_cache: yes
+
+# ================================
+# Control Node packages
+# ================================
+- name: Install control node packages
+  apt:
+    name:
+      - ansible
+      - sshpass
+    state: present
+  when: inventory_hostname in groups['control']
+
+# ================================
+# App Node minimal packages
+# ================================
+- name: Install app node base packages
+  apt:
+    name:
+      - nginx
+    state: present
+  when: inventory_hostname in groups['app']
+
+# ================================
+# DB Node minimal packages
+# ================================
+- name: Install DB node base packages
+  apt:
+    name:
+      - postgresql
+      - postgresql-contrib
+    state: present
+  when: inventory_hostname in groups['db']

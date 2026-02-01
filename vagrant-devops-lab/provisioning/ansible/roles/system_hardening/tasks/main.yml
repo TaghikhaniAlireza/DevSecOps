@@ -1,6 +1,13 @@
 ---
-- name: Ensure curl is installed
-  apt:
-    name: curl
-    state: present
-    update_cache: true
+- name: Base OS configuration
+  import_tasks: base.yml
+
+- name: Package and update hardening
+  import_tasks: packages.yml
+
+# firewall / ssh 
+# - name: Firewall hardening
+#   import_tasks: firewall.yml
+
+# - name: SSH hardening
+#   import_tasks: ssh.yml
