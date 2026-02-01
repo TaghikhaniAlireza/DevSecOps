@@ -1,32 +1,49 @@
----
-# PostgreSQL version discovery
-- name: Get PostgreSQL version
-  shell: |
-    psql -V | awk '{print $3}' | cut -d. -f1
-  become_user: postgres
-  register: pg_version
-  changed_when: false
+# ============================================
+# PostgreSQL version & config path discovery
+# ============================================
 
-- name: Set postgres config path
+- name: Discover installed PostgreSQL versions
+  find:
+    paths: /etc/postgresql
+    file_type: directory
+    depth: 1
+  register: postgresql_versions
+
+- name: Fail if no PostgreSQL version is detected
+  fail:
+    msg: "No PostgreSQL installation found under /etc/postgresql"
+  when: postgresql_versions.matched == 0
+
+- name: Set PostgreSQL version fact (first detected)
   set_fact:
-    pg_conf_path: "/etc/postgresql/{{ pg_version.stdout }}/main"
+    pg_version: "{{ postgresql_versions.files | map(attribute='path') | map('basename') | sort | last }}"
 
-# -------------------------------
-# Listen only on internal + localhost
-# -------------------------------
-- name: Configure listen_addresses
+- name: Set PostgreSQL configuration path
+  set_fact:
+    pg_conf_path: "/etc/postgresql/{{ pg_version }}/main"
+
+# ============================================
+# Network binding (internal only)
+# ============================================
+
+- name: Configure PostgreSQL listen addresses (localhost + internal IP)
   lineinfile:
     path: "{{ pg_conf_path }}/postgresql.conf"
-    regexp: '^#?listen_addresses'
+    regexp: '^[#\s]*listen_addresses\s*='
     line: "listen_addresses = 'localhost,192.168.56.12'"
+    state: present
+    backup: yes
   notify: Reload PostgreSQL
 
-# -------------------------------
-# Allow App server connection
-# -------------------------------
-- name: Allow App server access
+# ============================================
+# Client authentication (App server only)
+# ============================================
+
+- name: Allow App server access to PostgreSQL
   lineinfile:
     path: "{{ pg_conf_path }}/pg_hba.conf"
     line: "host    all     all     192.168.56.11/32    md5"
+    state: present
     insertafter: EOF
+    backup: yes
   notify: Reload PostgreSQL
