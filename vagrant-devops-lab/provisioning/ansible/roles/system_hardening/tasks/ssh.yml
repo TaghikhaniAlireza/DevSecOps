@@ -1,0 +1,102 @@
+---
+# ================================
+# SSH Hardening (SAFE MODE)
+# ================================
+
+- name: Ensure OpenSSH server is installed
+  apt:
+    name: openssh-server
+    state: present
+
+# ================================
+# Backup sshd_config (once)
+# ================================
+- name: Backup sshd_config
+  copy:
+    src: /etc/ssh/sshd_config
+    dest: /etc/ssh/sshd_config.bak
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0644'
+  when: not ansible_check_mode
+
+# ================================
+# Disable root login (SAFE)
+# ================================
+- name: Disable root SSH login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+
+## ================================
+## Limit allowed SSH users
+## ================================
+#- name: Allow only devops user
+#  lineinfile:
+#    path: /etc/ssh/sshd_config
+#    regexp: '^#?AllowUsers'
+#    line: 'AllowUsers devops'
+#
+## ================================
+## IPv4 only (reduce weird issues)
+## ================================
+#- name: Force SSH to use IPv4 only
+#  lineinfile:
+#    path: /etc/ssh/sshd_config
+#    regexp: '^#?AddressFamily'
+#    line: 'AddressFamily inet'
+
+# ================================
+# Session timeouts
+# ================================
+- name: Set SSH idle timeout
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?ClientAliveInterval'
+    line: 'ClientAliveInterval 300'
+
+- name: Set SSH alive count max
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?ClientAliveCountMax'
+    line: 'ClientAliveCountMax 2'
+
+# ================================
+# SSH Banner (Audit-friendly)
+# ================================
+- name: Configure SSH banner
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Banner'
+    line: 'Banner /etc/issue.net'
+
+- name: Create SSH banner file
+  copy:
+    dest: /etc/issue.net
+    content: |
+      *************************************************
+      *  Authorized access only.                     *
+      *  All activity may be monitored and logged.  *
+      *************************************************
+    owner: root
+    group: root
+    mode: '0644'
+
+# ================================
+# Validate SSH config
+# ================================
+- name: Validate sshd configuration
+  command: sshd -t
+  register: sshd_test
+  changed_when: false
+
+# ================================
+# Reload SSH (NOT restart)
+# ================================
+- name: Reload SSH service safely
+  service:
+    name: ssh
+    state: reloaded
+  when: sshd_test.rc == 0

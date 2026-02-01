@@ -5,9 +5,8 @@
 - name: Package and update hardening
   import_tasks: packages.yml
 
-# firewall / ssh 
-# - name: Firewall hardening
-#   import_tasks: firewall.yml
+#- name: Firewall hardening
+#  import_tasks: firewall.yml
 
-# - name: SSH hardening
-#   import_tasks: ssh.yml
+- name: SSH hardening
+  import_tasks: ssh.yml
