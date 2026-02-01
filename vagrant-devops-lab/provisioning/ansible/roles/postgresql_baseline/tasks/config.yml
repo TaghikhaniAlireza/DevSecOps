@@ -1,0 +1,32 @@
+---
+# PostgreSQL version discovery
+- name: Get PostgreSQL version
+  shell: |
+    psql -V | awk '{print $3}' | cut -d. -f1
+  become_user: postgres
+  register: pg_version
+  changed_when: false
+
+- name: Set postgres config path
+  set_fact:
+    pg_conf_path: "/etc/postgresql/{{ pg_version.stdout }}/main"
+
+# -------------------------------
+# Listen only on internal + localhost
+# -------------------------------
+- name: Configure listen_addresses
+  lineinfile:
+    path: "{{ pg_conf_path }}/postgresql.conf"
+    regexp: '^#?listen_addresses'
+    line: "listen_addresses = 'localhost,192.168.56.12'"
+  notify: Reload PostgreSQL
+
+# -------------------------------
+# Allow App server connection
+# -------------------------------
+- name: Allow App server access
+  lineinfile:
+    path: "{{ pg_conf_path }}/pg_hba.conf"
+    line: "host    all     all     192.168.56.11/32    md5"
+    insertafter: EOF
+  notify: Reload PostgreSQL
