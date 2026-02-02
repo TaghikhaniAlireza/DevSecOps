@@ -1,0 +1,49 @@
+---
+# tasks file for roles/preflight
+- name: Ensure correct ansible user
+  ansible.builtin.assert:
+    that:
+      - ansible_user == "devops"
+    fail_msg: "Wrong user! Expected devops"
+    success_msg: "Running as devops"
+  tags:
+    - preflight
+    - safety
+
+- name: Ensure supported OS
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == "Debian"
+    fail_msg: "Unsupported OS"
+    success_msg: "OS is supported"
+  tags:
+    - preflight
+    - safety
+
+- name: Validate node IP address
+  ansible.builtin.assert:
+    that:
+      - ansible_default_ipv4.address is defined
+    fail_msg: "No IPv4 address detected"
+  tags:
+    - preflight
+    - safety
+
+- name: Prevent nginx on db nodes
+  ansible.builtin.assert:
+    that:
+      - "'db' not in group_names or 'nginx' not in ansible_run_tags"
+    fail_msg: "nginx tag used on DB node!"
+  tags:
+    - preflight
+    - safety
+
+- name: Show execution context
+  ansible.builtin.debug:
+    msg:
+      - "Host: {{ inventory_hostname }}"
+      - "Groups: {{ group_names }}"
+      - "IP: {{ ansible_default_ipv4.address }}"
+      - "Tags: {{ ansible_run_tags }}"
+  tags:
+    - preflight
