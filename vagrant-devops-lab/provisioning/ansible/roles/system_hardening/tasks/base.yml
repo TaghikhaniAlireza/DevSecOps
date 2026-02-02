@@ -2,6 +2,9 @@
 - name: Set system timezone to Asia/Tehran
   timezone:
     name: Asia/Tehran
+  tags:
+    - base
+    - ops
 
 - name: Ensure locale packages are installed
   apt:
@@ -9,26 +12,41 @@
       - locales
     state: present
     update_cache: yes
+  tags:
+    - base
+    - ops
 
 - name: Ensure en_US.UTF-8 locale exists
   locale_gen:
     name: en_US.UTF-8
     state: present
+  tags:
+    - base
+    - ops
 
 - name: Set default system locale
   command: localectl set-locale LANG=en_US.UTF-8
   changed_when: false
+  tags:
+    - base
+    - ops
 
 - name: Ensure systemd-timesyncd is installed
   apt:
     name: systemd-timesyncd
     state: present
+  tags:
+    - base
+    - ops
 
 - name: Enable and start systemd-timesyncd
   systemd:
     name: systemd-timesyncd
     enabled: true
     state: started
+  tags:
+    - base
+    - ops
 
 - name: Install essential base packages
   apt:
@@ -40,3 +58,6 @@
       - gnupg
       - lsb-release
     state: present
+  tags:
+    - base
+    - ops

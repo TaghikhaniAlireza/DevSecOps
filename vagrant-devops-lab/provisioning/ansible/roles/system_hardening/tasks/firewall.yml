@@ -8,6 +8,9 @@
       - iptables
       - iptables-persistent
     state: present
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # Flush rules (BUT KEEP POLICY)
@@ -15,6 +18,9 @@
 - name: Flush existing rules
   iptables:
     flush: yes
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # Allow loopback
@@ -24,6 +30,9 @@
     chain: INPUT
     in_interface: lo
     jump: ACCEPT
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # Allow established
@@ -33,6 +42,9 @@
     chain: INPUT
     ctstate: ESTABLISHED,RELATED
     jump: ACCEPT
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # Allow SSH (CRITICAL)
@@ -43,6 +55,9 @@
     protocol: tcp
     destination_port: 22
     jump: ACCEPT
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # App node rules
@@ -54,6 +69,9 @@
     destination_port: "80"
     jump: ACCEPT
   when: inventory_hostname in groups['app']
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # DB node rules
@@ -66,6 +84,9 @@
     source: 192.168.56.11
     jump: ACCEPT
   when: inventory_hostname in groups['db']
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # NOW enforce default DROP
@@ -74,19 +95,31 @@
   iptables:
     chain: INPUT
     policy: DROP
+  tags:
+    - hardening
+    - firewall
 
 - name: Set default FORWARD policy DROP
   iptables:
     chain: FORWARD
     policy: DROP
+  tags:
+    - hardening
+    - firewall
 
 - name: Set default OUTPUT policy ACCEPT
   iptables:
     chain: OUTPUT
     policy: ACCEPT
+  tags:
+    - hardening
+    - firewall
 
 # ================================
 # Persist rules
 # ================================
 - name: Save iptables rules
   command: netfilter-persistent save
+  tags:
+    - hardening
+    - firewall

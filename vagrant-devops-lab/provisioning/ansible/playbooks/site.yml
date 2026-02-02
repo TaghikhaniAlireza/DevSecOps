@@ -3,16 +3,22 @@
   hosts: all
   become: true
   roles:
-    - system_hardening
+    - role: system_hardening
+      tags:
+        - system
 
 - name: Nginx baseline setup
   hosts: app
   become: true
   roles:
-    - nginx_hardening
+    - role: nginx_hardening
+      tags:
+        - nginx
 
 - name: PostgreSQL baseline setup
   hosts: db
   become: true
   roles:
-    - postgresql_baseline
+    - role: postgresql_baseline
+      tags:
+        - postgresql

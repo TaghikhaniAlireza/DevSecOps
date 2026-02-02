@@ -7,6 +7,9 @@
   apt:
     name: openssh-server
     state: present
+  tags:
+    - hardening
+    - ssh
 
 # ================================
 # Backup sshd_config (once)
@@ -20,6 +23,9 @@
     group: root
     mode: '0644'
   when: not ansible_check_mode
+  tags:
+    - hardening
+    - ssh
 
 # ================================
 # Disable root login (SAFE)
@@ -29,6 +35,9 @@
     path: /etc/ssh/sshd_config
     regexp: '^#?PermitRootLogin'
     line: 'PermitRootLogin no'
+  tags:
+    - hardening
+    - ssh
 
 ## ================================
 ## Limit allowed SSH users
@@ -38,6 +47,9 @@
 #    path: /etc/ssh/sshd_config
 #    regexp: '^#?AllowUsers'
 #    line: 'AllowUsers devops'
+  tags:
+    - hardening
+    - ssh
 #
 ## ================================
 ## IPv4 only (reduce weird issues)
@@ -47,6 +59,9 @@
 #    path: /etc/ssh/sshd_config
 #    regexp: '^#?AddressFamily'
 #    line: 'AddressFamily inet'
+  tags:
+    - hardening
+    - ssh
 
 # ================================
 # Session timeouts
@@ -56,12 +71,18 @@
     path: /etc/ssh/sshd_config
     regexp: '^#?ClientAliveInterval'
     line: 'ClientAliveInterval 300'
+  tags:
+    - hardening
+    - ssh
 
 - name: Set SSH alive count max
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^#?ClientAliveCountMax'
     line: 'ClientAliveCountMax 2'
+  tags:
+    - hardening
+    - ssh
 
 # ================================
 # SSH Banner (Audit-friendly)
@@ -71,6 +92,9 @@
     path: /etc/ssh/sshd_config
     regexp: '^#?Banner'
     line: 'Banner /etc/issue.net'
+  tags:
+    - hardening
+    - ssh
 
 - name: Create SSH banner file
   copy:
@@ -83,6 +107,9 @@
     owner: root
     group: root
     mode: '0644'
+  tags:
+    - hardening
+    - ssh
 
 # ================================
 # Validate SSH config
@@ -91,6 +118,9 @@
   command: sshd -t
   register: sshd_test
   changed_when: false
+  tags:
+    - hardening
+    - ssh
 
 # ================================
 # Reload SSH (NOT restart)
@@ -100,3 +130,6 @@
     name: ssh
     state: reloaded
   when: sshd_test.rc == 0
+  tags:
+    - hardening
+    - ssh

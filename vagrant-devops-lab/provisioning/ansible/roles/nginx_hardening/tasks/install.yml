@@ -8,6 +8,9 @@
     name: nginx
     state: present
     update_cache: yes
+  tags:
+    - app
+    - nginx
 
 # ================================
 # Remove default site
@@ -16,11 +19,17 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
+  tags:
+    - app
+    - nginx
 
 - name: Remove default Nginx site config
   file:
     path: /etc/nginx/sites-available/default
     state: absent
+  tags:
+    - app
+    - nginx
 
 # ================================
 # Deploy our minimal config
@@ -33,3 +42,6 @@
     group: root
     mode: '0644'
   notify: Reload nginx
+  tags:
+    - app
+    - nginx

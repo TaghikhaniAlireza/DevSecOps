@@ -6,3 +6,6 @@
       - postgresql-contrib
     state: present
     update_cache: yes
+  tags:
+    - db
+    - postgresql

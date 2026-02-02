@@ -8,19 +8,31 @@
     file_type: directory
     depth: 1
   register: postgresql_versions
+  tags:
+    - db
+    - postgresql
 
 - name: Fail if no PostgreSQL version is detected
   fail:
     msg: "No PostgreSQL installation found under /etc/postgresql"
   when: postgresql_versions.matched == 0
+  tags:
+    - db
+    - postgresql
 
 - name: Set PostgreSQL version fact (first detected)
   set_fact:
     pg_version: "{{ postgresql_versions.files | map(attribute='path') | map('basename') | sort | last }}"
+  tags:
+    - db
+    - postgresql
 
 - name: Set PostgreSQL configuration path
   set_fact:
     pg_conf_path: "/etc/postgresql/{{ pg_version }}/main"
+  tags:
+    - db
+    - postgresql
 
 # ============================================
 # Network binding (internal only)
@@ -34,6 +46,9 @@
     state: present
     backup: yes
   notify: Reload PostgreSQL
+  tags:
+    - db
+    - postgresql
 
 # ============================================
 # Client authentication (App server only)
@@ -47,3 +62,6 @@
     insertafter: EOF
     backup: yes
   notify: Reload PostgreSQL
+  tags:
+    - db
+    - postgresql

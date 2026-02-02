@@ -1,0 +1,16 @@
+# group_vars/all.yml
+
+ansible_user: devops
+
+timezone: Asia/Tehran
+locale_lang: en_US.UTF-8
+
+common_packages:
+  - curl
+  - git
+  - vim
+  - htop
+  - ca-certificates
+  - gnupg
+
+ops_firewall_ssh_port: 22

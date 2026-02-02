@@ -1,0 +1,7 @@
+# group_vars/app.yml
+
+app_name: noyan-app
+app_listen_port: 80
+
+nginx_worker_processes: auto
+nginx_server_tokens: "off"

@@ -1,0 +1,7 @@
+# group_vars/db.yml
+
+db_engine: postgresql
+db_listen_ip: 192.168.56.12
+db_app_ip: 192.168.56.11
+
+postgresql_port: 5432

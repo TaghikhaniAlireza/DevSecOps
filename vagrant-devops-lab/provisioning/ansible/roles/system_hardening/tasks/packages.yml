@@ -17,6 +17,9 @@
       - unzip
     state: present
     update_cache: yes
+  tags:
+    - app
+    - packages
 
 # ================================
 # Control Node packages
@@ -28,6 +31,9 @@
       - sshpass
     state: present
   when: inventory_hostname in groups['control']
+  tags:
+    - app
+    - ansible
 
 # ================================
 # App Node minimal packages
@@ -38,6 +44,9 @@
       - nginx
     state: present
   when: inventory_hostname in groups['app']
+  tags:
+    - app
+    - nginx
 
 # ================================
 # DB Node minimal packages
@@ -49,3 +58,6 @@
       - postgresql-contrib
     state: present
   when: inventory_hostname in groups['db']
+  tags:
+    - db
+    - postgresql
