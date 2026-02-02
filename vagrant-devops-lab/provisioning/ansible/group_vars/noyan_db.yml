@@ -1,7 +1,9 @@
-# group_vars/db.yml
+# group_vars/noyan_db.yml
 
 db_engine: postgresql
 db_listen_ip: 192.168.56.12
 db_app_ip: 192.168.56.11
 
 postgresql_port: 5432
+postgresql_app_user: devops
+postgresql_app_db: Noyan

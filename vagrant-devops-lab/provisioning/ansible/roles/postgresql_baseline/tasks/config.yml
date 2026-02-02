@@ -65,3 +65,13 @@
   tags:
     - db
     - postgresql
+
+#- name: Create application DB user
+#  postgresql_user:
+#    name: "{{ postgresql_app_user }}"
+#    password: "{{ postgresql_app_password }}"
+#    db: "{{ postgresql_app_db }}"
+#    state: present
+#  tags:
+#    - postgresql
+#    - db
