@@ -26,7 +26,7 @@ The environment uses **Ubuntu 22.04 (Jammy64)** as the base operating system for
 | **noyan-app** | Application Server | `192.168.56.11` | 1 | 1024 MB | Hosts the web application (Target Node). |
 | **noyan-db** | Database Server | `192.168.56.12` | 1 | 1024 MB | Hosts the database service (Target Node). |
 
-## 🔌 Integration & Data Flow
+##  Integration & Data Flow
 
 ### 1. Provisioning Flow
 *   **Shell Scripts:** Upon first boot, Vagrant executes `common.sh` on all nodes to install basic dependencies. Specific scripts (`control.sh`, `app.sh`, `db.sh`) run on respective nodes.
@@ -44,4 +44,5 @@ This allows you to edit Ansible playbooks on your Windows machine using VS Code,
 According to the inventory configuration:
 *   **Admin User:** `devops`
 *   **Authentication:** SSH Private Key (`~/.ssh/id_rsa`)
+
 
