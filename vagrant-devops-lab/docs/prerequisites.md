@@ -5,7 +5,7 @@ This document outlines the infrastructure topology, hardware specifications, and
 ## High-Level Topology
 
 The lab consists of **three virtual machines** running on a private network managed by VirtualBox. The Host machine (your PC) orchestrates the creation of these VMs via Vagrant.
-```mermaid
+
 graph TD
 Host[Windows Host Machine] -- Vagrant --> VB[VirtualBox Hypervisor]
 
@@ -44,3 +44,4 @@ This allows you to edit Ansible playbooks on your Windows machine using VS Code,
 According to the inventory configuration:
 *   **Admin User:** `devops`
 *   **Authentication:** SSH Private Key (`~/.ssh/id_rsa`)
+
